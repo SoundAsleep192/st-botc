@@ -22,7 +22,7 @@ export const ROLES: Record<RoleId, Role> = {
   nancy:    R({ id: "nancy",    name: "Nancy",        ruName: "Нэнси",           category: "townsfolk", team: "good", firstNight: 70,  otherNight: 0 }),
   dustin:   R({ id: "dustin",   name: "Dustin",       ruName: "Дастин",          category: "townsfolk", team: "good", firstNight: 0,   otherNight: 110 }),
   joyce:    R({ id: "joyce",    name: "Joyce",        ruName: "Джойс",           category: "townsfolk", team: "good", firstNight: 0,   otherNight: 120 }),
-  mike:     R({ id: "mike",     name: "Mike",         ruName: "Майк",            category: "townsfolk", team: "good", firstNight: 0,   otherNight: 130 }),
+  mike:     R({ id: "mike",     name: "Mike",         ruName: "Майк",            category: "townsfolk", team: "good", firstNight: 0,   otherNight: 200 }),
   max:      R({ id: "max",      name: "Max",          ruName: "Макс",            category: "townsfolk", team: "good", firstNight: 0,   otherNight: 0 }),
   lucas:    R({ id: "lucas",    name: "Lucas",        ruName: "Лукас",           category: "townsfolk", team: "good", firstNight: 0,   otherNight: 140 }),
   murray:   R({ id: "murray",   name: "Murray",       ruName: "Мюррей",          category: "townsfolk", team: "good", firstNight: 80,  otherNight: 0 }),

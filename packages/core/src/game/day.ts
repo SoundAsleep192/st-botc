@@ -19,33 +19,52 @@ export function runDay(state: GameState): void {
   checkWhatsitWinAnnouncement(state);
   if (checkWin(state)) return;
 
-  // Обычный ход дня: номинации и казнь (упрощённо — одна казнь в день максимум)
+  // Номинации и казнь.
+  // Правила (как в BotC):
+  //   1) Каждый живой может номинировать максимум 1 раз за день.
+  //   2) Каждого живого можно номинировать максимум 1 раз за день.
+  //   3) Каждая номинация — отдельное голосование, они НЕ суммируются.
+  //   4) В конце дня казнят ТОЛЬКО ОДНОГО — с максимумом голосов среди тех,
+  //      кто прошёл порог. При равенстве на максимуме — никого не казнят.
   const live = livePlayers(state);
   const nominators = live.slice();
-  const nominated: Map<number, number> = new Map(); // nominee id → vote count
+  const hasNominated = new Set<number>();
+  const wasNominated = new Set<number>();
+  /** История номинаций этого дня: каждое голосование отдельно. */
+  const nominations: Array<{ nomineeId: number; votes: number }> = [];
 
   const threshold = Math.ceil(live.length / 2);
   for (const nominator of nominators) {
     if (!nominator.status.alive) continue;
-    const candidates = live.filter((p) => p.id !== nominator.id && p.status.alive);
+    if (hasNominated.has(nominator.id)) continue;
+    const candidates = live.filter(
+      (p) => p.id !== nominator.id && p.status.alive && !wasNominated.has(p.id)
+    );
+    if (candidates.length === 0) continue;
     const target = nominator.brain.pickNominee(state, nominator, candidates);
     if (!target || !target.status.alive) continue;
+    if (wasNominated.has(target.id)) continue;
 
-    // Тиер 3 Векны — активно помеченные не могут номинировать: попытка = немедленная смерть
+    // Тиер 3 Векны — активно помеченные не могут номинировать: попытка = немедленная смерть.
     if (state.vecnaEscalation >= 3 && hasActiveMark(nominator)) {
       killPlayer(state, nominator, { kind: "madness-violation" });
+      hasNominated.add(nominator.id);
       continue;
     }
 
+    hasNominated.add(nominator.id);
+    wasNominated.add(target.id);
+
     const votes = collectVotes(state, target);
-    nominated.set(target.id, (nominated.get(target.id) ?? 0) + votes);
+    nominations.push({ nomineeId: target.id, votes });
     state.log.push({
       phase: "day", day: state.day, type: "nominate",
       actor: nominator.id, target: target.id,
       detail: `${votes}/${threshold}`,
     });
 
-    // Фиксируем «не пропустил голосование» для цели и голосовавших — для Демогоргона
+    // Для Демогоргона: цель точно «участвовала» — она физически на арене номинации;
+    // голосовавшие отмечают в voteOnNomination через votedTonight.
     (target.memory as { skippedAllVotes?: boolean }).skippedAllVotes = false;
     for (const p of live) {
       if ((p.memory as { votedTonight?: boolean }).votedTonight === true) {
@@ -54,26 +73,35 @@ export function runDay(state: GameState): void {
     }
   }
 
-  // Определяем казнь: нужен порог = ceil(live/2), побеждает максимум голосов
+  // Казнь: максимум голосов среди тех, кто прошёл порог; при ничье — никого.
   let execId: number | null = null;
   let maxVotes = 0;
-  for (const [id, votes] of nominated.entries()) {
-    if (votes >= threshold && votes > maxVotes) {
+  let tied = false;
+  for (const { nomineeId, votes } of nominations) {
+    if (votes < threshold) continue;
+    if (votes > maxVotes) {
       maxVotes = votes;
-      execId = id;
+      execId = nomineeId;
+      tied = false;
+    } else if (votes === maxVotes) {
+      tied = true;
     }
   }
+  if (tied) execId = null;
 
   if (execId !== null) {
     const target = state.players.find((p) => p.id === execId);
     if (target) killPlayer(state, target, { kind: "vote" });
   } else {
-    if (nominated.size > 0) {
-      state.log.push({ phase: "day", day: state.day, type: "exec-none", detail: "никто не набрал порога" });
-    } else {
-      state.log.push({ phase: "day", day: state.day, type: "exec-none", detail: "нет номинаций" });
-    }
-    // Никто не казнён — помечаем всех как «пропустил голосование» для Демогоргона
+    const hadThresholdTie = nominations.some((n) => n.votes >= threshold);
+    const detail =
+      nominations.length === 0
+        ? "нет номинаций"
+        : hadThresholdTie
+          ? "ничья на максимуме — никого не казнили"
+          : "никто не набрал порога";
+    state.log.push({ phase: "day", day: state.day, type: "exec-none", detail });
+    // Никого не казнили — для Демогоргона: всё живое пропустило финальную казнь.
     for (const p of live) {
       (p.memory as { skippedAllVotes?: boolean }).skippedAllVotes = true;
     }
