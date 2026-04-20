@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Изнанка Хокинса — жетоны 30mm</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=IBM+Plex+Sans:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --page-w: 210mm;
+      --page-h: 297mm;
+      --margin: 5mm;
+      --token-size: 30mm;
+      --gap: 2mm;
+      --ring: #1f2130;
+      --label-bg: rgba(20, 22, 35, 0.82);
+      --label-text: #f7f8ff;
+      --cut: rgba(35, 36, 50, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #ddd8cf;
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      color: #1a1a1f;
+    }
+
+    .sheet {
+      width: var(--page-w);
+      min-height: var(--page-h);
+      margin: 0 auto;
+      padding: var(--margin);
+      background: #faf8f2;
+    }
+
+    .header {
+      margin-bottom: 3mm;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 4mm;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-family: "Bungee", cursive;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+    }
+
+    .header .meta {
+      font-size: 10px;
+      opacity: 0.8;
+      white-space: nowrap;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(6, var(--token-size));
+      grid-auto-rows: var(--token-size);
+      gap: var(--gap);
+      justify-content: center;
+      align-content: start;
+      width: 100%;
+    }
+
+    .token {
+      position: relative;
+      width: var(--token-size);
+      height: var(--token-size);
+      border-radius: 50%;
+      overflow: hidden;
+      border: 0.35mm solid var(--ring);
+      background: #fff;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .token img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .token::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 0.2mm dashed var(--cut);
+      pointer-events: none;
+    }
+
+    .name {
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      bottom: 8%;
+      padding: 0.65mm 1mm 0.75mm;
+      border-radius: 999px;
+      background: var(--label-bg);
+      color: var(--label-text);
+      text-align: center;
+      font-weight: 700;
+      font-size: 2.45mm;
+      line-height: 1.05;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      text-wrap: balance;
+      text-shadow: 0 0 0.4mm rgba(0, 0, 0, 0.5);
+    }
+
+    @media print {
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: #fff;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .sheet {
+        margin: 0;
+        padding: var(--margin);
+      }
+
+      .header {
+        margin-bottom: 2.5mm;
+      }
+    }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="header">
+      <h1>Изнанка Хокинса — жетоны</h1>
+      <div class="meta">30mm · A4 · масштаб печати 100%</div>
+    </header>
+    <section class="grid" id="tokenGrid" aria-label="Лист жетонов"></section>
+  </main>
+
+  <script>
+    const roles = [
+      { name: "Оди", file: "tokens/eleven.png" },
+      { name: "Хоппер", file: "tokens/hopper.png" },
+      { name: "Стив", file: "tokens/steve.png" },
+      { name: "Робин", file: "tokens/robin.png" },
+      { name: "Нэнси", file: "tokens/nancy.png" },
+      { name: "Дастин", file: "tokens/dustin.png" },
+      { name: "Джойс", file: "tokens/joyce.png" },
+      { name: "Майк", file: "tokens/mike.png" },
+      { name: "Макс", file: "tokens/max.png" },
+      { name: "Лукас", file: "tokens/lucas.png" },
+      { name: "Мюррей", file: "tokens/murray.png" },
+      { name: "Сюзи", file: "tokens/suzie.png" },
+      { name: "Эдди", file: "tokens/eddie.png" },
+      { name: "Уилл", file: "tokens/will.png" },
+      { name: "Тед", file: "tokens/ted.png" },
+      { name: "Юрий", file: "tokens/yuri.png" },
+      { name: "Алексей", file: "tokens/alexey.png" },
+      { name: "Барб", file: "tokens/barb.png" },
+      { name: "Билли", file: "tokens/billy.png" },
+      { name: "Бреннер", file: "tokens/brenner.png" },
+      { name: "Григорий", file: "tokens/grigori.png" },
+      { name: "Демогоргон", file: "tokens/demogorgon.png" },
+      { name: "Векна", file: "tokens/vecna.png" },
+      { name: "Истязатель", file: "tokens/mindflayer.png" },
+      { name: "М-р Этосамое", file: "tokens/whatsit.png" }
+    ];
+
+    const grid = document.getElementById("tokenGrid");
+
+    for (let i = 0; i < roles.length; i += 1) {
+      const role = roles[i];
+      const item = document.createElement("article");
+      item.className = "token";
+      item.innerHTML = `
+        <img src="${role.file}" alt="${role.name}" loading="eager" />
+        <div class="name">${role.name}</div>
+      `;
+      grid.appendChild(item);
+    }
+  </script>
+</body>
+</html>

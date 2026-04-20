@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Изнанка Хокинса — матрица взаимодействий</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #e8e4dc;
+      --paper: #f7f4ed;
+      --ink: #1a1a1f;
+      --muted: #5c5852;
+      --good: #0d5cab;
+      --good-soft: rgba(13, 92, 171, 0.10);
+      --evil: #9b1428;
+      --evil-soft: rgba(155, 20, 40, 0.10);
+      --rule: #c9c4ba;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      font-size: 10.5px;
+      line-height: 1.35;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 12mm 10mm 10mm;
+      background: linear-gradient(180deg, #fdfcfa 0%, var(--paper) 35%, #f2efe6 100%);
+      border: 1px solid var(--rule);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    header.sheet-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .title-block h1 {
+      margin: 0;
+      font-family: "Bungee", cursive;
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      color: var(--evil);
+      text-shadow: 1.5px 1.5px 0 #2a2730;
+    }
+
+    .title-block .subtitle {
+      margin: 6px 0 0;
+      font-size: 10.5px;
+      color: var(--muted);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .lab-badge {
+      flex-shrink: 0;
+      min-width: 200px;
+      padding: 5px 9px 6px;
+      border: 2px solid #2a2730;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      text-align: center;
+      background: #f3f2f0;
+    }
+
+    .lab-badge__line {
+      display: block;
+      font-family: "Bungee", cursive;
+      font-size: 26px;
+      line-height: 0.95;
+      color: #1f1b23;
+      letter-spacing: 0.03em;
+    }
+
+    .lab-badge__line--sub {
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      font-size: 7px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .lab-badge__line--dept {
+      font-size: 6px;
+      letter-spacing: 0.2em;
+    }
+
+    main.blocks {
+      columns: 2;
+      column-gap: 6mm;
+      column-fill: balance;
+    }
+
+    .block {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin: 0 0 7px;
+      padding: 6px 8px 7px;
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      background: #fff;
+    }
+
+    .block.good  { border-left: 3px solid var(--good); }
+    .block.evil  { border-left: 3px solid var(--evil); }
+    .block.mixed { border-left: 3px solid #6a4b9c; }
+
+    .block h2 {
+      margin: 0 0 5px;
+      font-family: "Bungee", cursive;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    .jinx {
+      margin: 0 0 4px;
+      padding: 0;
+      border: none;
+      background: none;
+    }
+
+    .jinx:last-child { margin-bottom: 0; }
+
+    .jinx-pair {
+      display: block;
+      font-weight: 700;
+      font-size: 10px;
+      color: var(--ink);
+      letter-spacing: 0.01em;
+    }
+
+    .jinx-pair .x {
+      color: var(--muted);
+      font-weight: 400;
+      margin: 0 2px;
+    }
+
+    .jinx-body {
+      margin: 1px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .jinx-body li {
+      position: relative;
+      padding: 0 0 0 8px;
+      margin: 0;
+      font-size: 9.5px;
+      line-height: 1.3;
+      color: var(--ink);
+    }
+
+    .jinx-body li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 3px;
+      height: 3px;
+      background: var(--muted);
+      border-radius: 50%;
+    }
+
+    .legend {
+      margin-top: 8px;
+      padding: 6px 9px;
+      border: 1px dashed var(--rule);
+      border-radius: 6px;
+      font-size: 9px;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .legend .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+
+    .legend .good  { background: var(--good); }
+    .legend .evil  { background: var(--evil); }
+    .legend .mixed { background: #6a4b9c; }
+
+    footer.sheet-footer {
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 6px;
+      font-size: 8.5px;
+      color: var(--muted);
+    }
+
+    @media print {
+      html, body { margin: 0; padding: 0; }
+      body {
+        background: #fff;
+        min-height: 0;
+        font-size: 8.8px;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      body::before { display: none; }
+      .wrap {
+        max-width: none;
+        margin: 0;
+        padding: 5mm 6mm 4mm;
+        border: none;
+        box-shadow: none;
+        background: #fff;
+      }
+      :root { --paper: #fff; --rule: #bbb; }
+
+      header.sheet-header {
+        margin-bottom: 5px;
+        padding-bottom: 4px;
+      }
+      .title-block h1 { font-size: 22px; }
+      .title-block .subtitle { font-size: 8.5px; margin-top: 3px; }
+
+      .lab-badge { min-width: 150px; padding: 3px 7px 4px; }
+      .lab-badge__line { font-size: 20px; }
+      .lab-badge__line--sub { font-size: 6.2px; }
+      .lab-badge__line--dept { font-size: 5.7px; }
+
+      main.blocks { column-gap: 4mm; }
+
+      .block {
+        margin-bottom: 3px;
+        padding: 3px 5px 4px;
+      }
+
+      .block h2 { font-size: 9px; margin-bottom: 2px; }
+
+      .jinx { margin-bottom: 2px; }
+      .jinx-pair { font-size: 8.3px; }
+      .jinx-body li { font-size: 7.8px; line-height: 1.22; padding-left: 6px; }
+      .jinx-body li::before { top: 0.5em; width: 2px; height: 2px; }
+
+      .legend { font-size: 7.5px; padding: 4px 7px; margin-top: 5px; }
+
+      footer.sheet-footer {
+        font-size: 7px;
+        padding-top: 4px;
+        margin-top: 4px;
+      }
+    }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="sheet-header">
+      <div class="title-block">
+        <h1>Матрица взаимодействий</h1>
+        <p class="subtitle">Изнанка Хокинса · корнер-кейсы для ведущего</p>
+      </div>
+      <div class="lab-badge" title="Hawkins National Laboratory">
+        <span class="lab-badge__line">hnl</span>
+        <span class="lab-badge__line lab-badge__line--sub">Hawkins National Laboratory</span>
+        <span class="lab-badge__line lab-badge__line--sub lab-badge__line--dept">U.S. Department of Energy</span>
+      </div>
+    </header>
+
+    <main class="blocks">
+
+      <!-- A. ЗАЩИТЫ × АТАКИ -->
+      <section class="block good">
+        <h2>A. Защиты × атаки</h2>
+
+        <div class="jinx">
+          <span class="jinx-pair">Хоппер <span class="x">×</span> Векна (Метка)</span>
+          <ul class="jinx-body">
+            <li>Спасает от срабатывания Метки — Метка снимается, эскалация НЕ идёт.</li>
+            <li>Следующей ночью Хоппер умирает (источник = Демон).</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Хоппер <span class="x">×</span> Демогоргон / Билли / Алексей / Барб</span>
+          <ul class="jinx-body">
+            <li>Спасает без штрафа — источник не Демон.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Хоппер <span class="x">×</span> Истязатель (действие 2)</span>
+          <ul class="jinx-body">
+            <li>Защищает от цепной смерти, штраф есть (источник = Демон).</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Стив <span class="x">×</span> Векна (Метка)</span>
+          <ul class="jinx-body">
+            <li>Метка снимается, эскалация НЕ идёт. Стив НЕ умирает, кулдаун 1 ночь.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Стив <span class="x">×</span> любой ночной килл</span>
+          <ul class="jinx-body">
+            <li>Защищает от всего. Пасс без выбора — кулдауна нет.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Макс <span class="x">×</span> Векна (Метка)</span>
+          <ul class="jinx-body">
+            <li>Метка ставится, Макс видит часы. Эффекты Метки (отравление, безумие) действуют.</li>
+            <li>Убийство Меткой не срабатывает. Эскалация НЕ считается.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Макс <span class="x">×</span> Истязатель (действие 2)</span>
+          <ul class="jinx-body">
+            <li>Макс НЕ умирает (источник = Демон), даже если отравлена.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Макс <span class="x">×</span> Демогоргон / Билли / Алексей / Барб</span>
+          <ul class="jinx-body">
+            <li>Умирает обычным образом. Иммунитет только к Демону.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Хоппер / Стив / Макс <span class="x">×</span> Мистер Этосамое</span>
+          <ul class="jinx-body">
+            <li>Переманивание — не убийство. Защиты и иммунитет не работают.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Оди <span class="x">×</span> любой демон</span>
+          <ul class="jinx-body">
+            <li>У Оди нет иммунитета. Её «контр-винкондишен» — одноразовая дневная казнь, которая может убить Демона и закончить игру.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Б. БЛОКИРОВКА -->
+      <section class="block evil">
+        <h2>Б. Блокировка (Григорий)</h2>
+
+        <div class="jinx">
+          <span class="jinx-pair">Григорий <span class="x">×</span> Векна</span>
+          <ul class="jinx-body">
+            <li>Новая Метка не ставится. Старая (с прошлой ночи) срабатывает как обычно.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Григорий <span class="x">×</span> Хоппер / Стив</span>
+          <ul class="jinx-body">
+            <li>Защита не работает. Стив НЕ получает кулдаун.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Григорий <span class="x">×</span> Билли / Истязатель / Мистер Этосамое</span>
+          <ul class="jinx-body">
+            <li>Способность этой ночью не применяется. Прошлые эффекты остаются как были.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Григорий <span class="x">×</span> Эдди</span>
+          <ul class="jinx-body">
+            <li>Эдди не просыпается — Концерта нет, Эдди жив.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Григорий <span class="x">×</span> Робин</span>
+          <ul class="jinx-body">
+            <li>Робин иммунна к искажениям, но НЕ к блокировке — не просыпается, инфы нет.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Григорий <span class="x">×</span> инфо-роли</span>
+          <ul class="jinx-body">
+            <li>Майк, Дастин, Джойс, Лукас, Сюзи, Оди (ночная) — просто не просыпаются.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Григорий <span class="x">×</span> Оди (дневная)</span>
+          <ul class="jinx-body">
+            <li>Дневная казнь НЕ блокируется — только ночная способность.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Григорий <span class="x">×</span> Юрий</span>
+          <ul class="jinx-body">
+            <li>Смена команды — свойство роли, не ночная способность. Юрий меняется как обычно.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- В. ИНФО × ИСКАЖЕНИЯ -->
+      <section class="block good">
+        <h2>В. Инфо × искажения</h2>
+
+        <div class="jinx">
+          <span class="jinx-pair">Робин <span class="x">×</span> отравление / опьянение / безумие</span>
+          <ul class="jinx-body">
+            <li>Информация Робин всегда корректна. Иммунитет к искажению.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Сюзи <span class="x">×</span> Билли</span>
+          <ul class="jinx-body">
+            <li>Инверсия команды от Билли не влияет на Сюзи (она проверяет роль, не команду).</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Сюзи <span class="x">×</span> отравление</span>
+          <ul class="jinx-body">
+            <li>Отравленной Сюзи ведущий даёт ложный ответ (наоборот).</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Сюзи <span class="x">×</span> Мистер Этосамое</span>
+          <ul class="jinx-body">
+            <li>Переманенная Сюзи получает правду на проверки. Команда — злая, механика — как у доброй.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Майк <span class="x">×</span> Юрий</span>
+          <ul class="jinx-body">
+            <li>Проверяет команду на момент проверки. В добром цикле Юрия ответ «да», в злом — «нет».</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Майк <span class="x">×</span> блокировка</span>
+          <ul class="jinx-body">
+            <li>Если цель не просыпалась — Майк инфы не получает.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Лукас <span class="x">×</span> активные выборы зла</span>
+          <ul class="jinx-body">
+            <li>Билли, Григорий, Векна (новая Метка), Демогоргон, Истязатель (дейст. 1), Мистер Этосамое — узнаёт «да» + тип роли.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Лукас <span class="x">×</span> пассивные эффекты</span>
+          <ul class="jinx-body">
+            <li>Срабатывание старой Метки Векны, отравление от смерти Алексея/Барб, цепная смерть Истязателя — НЕ активные, Лукас не узнаёт.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Лукас <span class="x">×</span> Мистер Этосамое</span>
+          <ul class="jinx-body">
+            <li>Переманивание — активный злой выбор. Лукас узнаёт «да, Демон». Серьёзная утечка.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Нэнси <span class="x">×</span> Юрий</span>
+          <ul class="jinx-body">
+            <li>Юрий — Изгой, не Приспешник. Ведущий не должен ставить его в пару с ролью Приспешника.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Нэнси <span class="x">×</span> Мистер Этосамое (Приспешников нет)</span>
+          <ul class="jinx-body">
+            <li>Ведущий показывает «вилку» на Демона — один из двух = Мистер Этосамое.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Дастин <span class="x">×</span> Мистер Этосамое</span>
+          <ul class="jinx-body">
+            <li>«Демон» = сам Этосамое. Переманенные не считаются Демоном для Дастина.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Джойс <span class="x">×</span> Мистер Этосамое</span>
+          <ul class="jinx-body">
+            <li>Переманивание — смена команды, НЕ негативный статус. Джойс НЕ видит.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Джойс <span class="x">×</span> Григорий / Эдди</span>
+          <ul class="jinx-body">
+            <li>Блокировка и Концерт — не статусы. Джойс НЕ видит.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Г. СМЕНА СТОРОНЫ -->
+      <section class="block mixed">
+        <h2>Г. Смена стороны</h2>
+
+        <div class="jinx">
+          <span class="jinx-pair">Юрий <span class="x">×</span> Билли</span>
+          <ul class="jinx-body">
+            <li>Билли инвертирует команду ПОСЛЕ смены Юрия. Двойной эффект — инверсия действует на новую команду этой ночи.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Юрий <span class="x">×</span> Мистер Этосамое</span>
+          <ul class="jinx-body">
+            <li>Переманенный добрый Юрий → злой навсегда. Цикл смены команды ОСТАНАВЛИВАЕТСЯ.</li>
+            <li>Переманенный злой Юрий — ничего не меняется, теперь видит Демона и злых.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Юрий <span class="x">×</span> Барб</span>
+          <ul class="jinx-body">
+            <li>В добром цикле Юрий может быть выбран жертвой отравления Барб; в злом — пропускается.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Юрий <span class="x">×</span> Оди</span>
+          <ul class="jinx-body">
+            <li>Юрий просыпается КАЖДУЮ ночь (видит команду). Оди, выбрав его, всегда узнаёт «да».</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Мистер Этосамое <span class="x">×</span> Оди</span>
+          <ul class="jinx-body">
+            <li>Переманить Оди выгодно: нейтрализует её дневную угрозу и отдаёт «казнь» в руки зла.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Мистер Этосамое <span class="x">×</span> Уилл</span>
+          <ul class="jinx-body">
+            <li>Уилл узнаёт о переманивании и способности, но уже стал злым.</li>
+            <li>СЛУЧАЙНЫЙ Житель тоже переманивается в ту же ночь — усиление для Этосамого.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Мистер Этосамое <span class="x">×</span> Тед</span>
+          <ul class="jinx-body">
+            <li>Направленная способность на Теда → Тед умирает. Переманивание не срабатывает. Этосамое теряет ночь.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Мистер Этосамое <span class="x">×</span> Алексей</span>
+          <ul class="jinx-body">
+            <li>Переманенный Алексей жив → отравление соседа не снимается.</li>
+            <li>Инфу в N3 ведущий даёт даже переманенному Алексею (даёт имя Этосамого или другого злого).</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Мистер Этосамое <span class="x">×</span> Барб</span>
+          <ul class="jinx-body">
+            <li>Переманенная Барб при смерти всё равно триггерит отравление другого доброго.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Мистер Этосамое <span class="x">×</span> инфо-роли</span>
+          <ul class="jinx-body">
+            <li>Переманенная инфо-роль работает как раньше, но теперь делится инфой со злом. Опасно для добра.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Д. ЭДДИ И КОНЦЕРТ -->
+      <section class="block evil">
+        <h2>Д. Эдди и Концерт</h2>
+
+        <div class="jinx">
+          <span class="jinx-pair">Эдди <span class="x">×</span> Векна</span>
+          <ul class="jinx-body">
+            <li>Метка перенаправляется на Эдди. Эдди умирает от Концерта — эскалация НЕ считается (умер не от Метки).</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Эдди <span class="x">×</span> Истязатель</span>
+          <ul class="jinx-body">
+            <li>Отравление / цепная смерть применяются к Эдди. Эдди умирает в любом случае.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Эдди <span class="x">×</span> Билли / Демогоргон</span>
+          <ul class="jinx-body">
+            <li>Инверсия / убийство перенаправляются на Эдди. Итог — Эдди мёртв.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Эдди <span class="x">×</span> Мистер Этосамое</span>
+          <ul class="jinx-body">
+            <li>Переманивание перенаправляется на Эдди. Эдди становится злым на миг и умирает. «−1 доброго / 0 злых».</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Эдди <span class="x">×</span> Григорий</span>
+          <ul class="jinx-body">
+            <li>Блокировка Эдди = Концерта нет, Эдди жив. Злые ведут обычную ночь.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Эдди <span class="x">×</span> Хоппер / Стив / Макс</span>
+          <ul class="jinx-body">
+            <li>Защиты и иммунитеты НЕ работают: Эдди сам идёт на жертву.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Е. ПОСМЕРТНЫЕ ТРИГГЕРЫ -->
+      <section class="block mixed">
+        <h2>Е. Посмертные триггеры</h2>
+
+        <div class="jinx">
+          <span class="jinx-pair">Барб умирает (любым образом)</span>
+          <ul class="jinx-body">
+            <li>Случайный другой ДОБРЫЙ игрок отравлен до конца игры, он об этом узнаёт.</li>
+            <li>Если все добрые уже отравлены — повторный выбор (эффект продлевается).</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Игрок с Меткой Векны умирает</span>
+          <ul class="jinx-body">
+            <li>Эскалация +1 тир — любым способом смерти (казнь, Истязатель, Алексей и т.д.).</li>
+            <li>Снятие Метки защитой/иммунитетом Макс — НЕ считается смертью.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Алексей умирает до N3</span>
+          <ul class="jinx-body">
+            <li>Инфы в N3 нет. Отравление соседа снимается со следующей ночи.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Оди умирает</span>
+          <ul class="jinx-body">
+            <li>Неиспользованная дневная казнь уходит вместе с ней.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Ж. СОСТАВ ПАРТИИ -->
+      <section class="block good">
+        <h2>Ж. Состав партии</h2>
+
+        <div class="jinx">
+          <span class="jinx-pair">Бреннер (+1 Изгой)</span>
+          <ul class="jinx-body">
+            <li>Один слот Жителя → в Изгои. Применяется при составе.</li>
+            <li>Нельзя в одной партии с Мистером Этосамым (у того нет Приспешников).</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Мистер Этосамое (0 Приспешников)</span>
+          <ul class="jinx-body">
+            <li>Билли, Бреннер, Григорий, Демогоргон НЕ берутся в партию.</li>
+            <li>Места Приспешников → в Жителей. На 12+ одно может уйти в Изгои.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Один Демон в партии</span>
+          <ul class="jinx-body">
+            <li>Векна, Истязатель, Мистер Этосамое — всегда только один. Эффекты отсутствующего Демона (Метка, цепная смерть, переманивание) в партии не существуют.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- З. ОБЩИЕ УТОЧНЕНИЯ -->
+      <section class="block mixed">
+        <h2>З. Общие уточнения</h2>
+
+        <div class="jinx">
+          <span class="jinx-pair">«Активный» выбор зла (для Лукаса)</span>
+          <ul class="jinx-body">
+            <li>Злой игрок АКТИВНО выбрал цель этой ночью: Векна (новая Метка), Билли, Григорий, Демогоргон, Истязатель (дейст. 1), Мистер Этосамое.</li>
+            <li>Пассивно = срабатывание эффекта, положенного ранее (старая Метка, цепная смерть, отравление после смерти).</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">«Направленная способность» (для Теда)</span>
+          <ul class="jinx-body">
+            <li>Любой игрок выбрал Теда целью своей роли (любой команды и типа).</li>
+            <li>Массовые / случайные эффекты (Уилл → случайный Житель, цепная смерть Истязателя) — НЕ направленная.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">«Просыпался ночью» (для Оди, Майка)</span>
+          <ul class="jinx-body">
+            <li>Ведущий реально будил игрока для способности или эффекта (Юрий — каждую ночь, жертва переманивания, игрок с Меткой и т.п.).</li>
+            <li>Пассивные эффекты без пробуждения — не считаются.</li>
+          </ul>
+        </div>
+
+        <div class="jinx">
+          <span class="jinx-pair">Оди детектит переманивание</span>
+          <ul class="jinx-body">
+            <li>Переманенный просыпается в ту же ночь. Оди, выбрав его, узнаёт «просыпался» — сильный индикатор.</li>
+          </ul>
+        </div>
+      </section>
+
+    </main>
+
+    <div class="legend">
+      <span><span class="dot good"></span>добрые взаимодействия</span>
+      <span><span class="dot evil"></span>злые / атакующие</span>
+      <span><span class="dot mixed"></span>смешанные и триггерные</span>
+    </div>
+
+    <footer class="sheet-footer">
+      <span>© Steven Medway · <a href="https://bloodontheclocktower.com">bloodontheclocktower.com</a> · фанатский сет «Изнанка Хокинса»</span>
+      <span>Версия для ведущего. Не показывать игрокам.</span>
+    </footer>
+  </div>
+</body>
+</html>

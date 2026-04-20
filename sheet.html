@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Изнанка Хокинса — лист ролей</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #e8e4dc;
+      --paper: #f7f4ed;
+      --ink: #1a1a1f;
+      --muted: #5c5852;
+      --good: #0d5cab;
+      --good-soft: rgba(13, 92, 171, 0.12);
+      --evil: #9b1428;
+      --evil-soft: rgba(155, 20, 40, 0.1);
+      --rule: #c9c4ba;
+      --icon-size: 132px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      font-size: 12.5px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* лёгкая бумажная текстура */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 14mm 12mm 16mm;
+      background: linear-gradient(180deg, #fdfcfa 0%, var(--paper) 35%, #f2efe6 100%);
+      border: 1px solid var(--rule);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    header.sheet-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .title-block h1 {
+      margin: 0;
+      font-family: "Bungee", cursive;
+      font-size: 30px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      color: var(--evil);
+      text-shadow: 1.5px 1.5px 0 #2a2730;
+    }
+
+    .title-block .subtitle {
+      margin: 6px 0 0;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .lab-badge {
+      flex-shrink: 0;
+      min-width: 210px;
+      padding: 6px 10px 7px;
+      border: 2px solid #2a2730;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      text-align: center;
+      background: #f3f2f0;
+    }
+
+    .lab-badge__line {
+      display: block;
+      font-family: "Bungee", cursive;
+      font-size: 30px;
+      line-height: 0.95;
+      color: #1f1b23;
+      letter-spacing: 0.03em;
+    }
+
+    .lab-badge__line--sub {
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #1f1b23;
+    }
+
+    .lab-badge__line--dept {
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      color: #2a2730;
+    }
+
+    .section {
+      margin-bottom: 14px;
+    }
+
+    .section-hr {
+      display: block;
+      margin: 0 0 12px;
+      border-bottom: 2px solid var(--rule);
+      padding-bottom: 8px;
+    }
+
+    .section-badge {
+      display: inline-block;
+      padding: 6px 14px 7px;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border: 2px solid currentColor;
+      background: #fff;
+      line-height: 1;
+    }
+
+    .section-badge.good {
+      color: var(--good);
+      background: rgba(13, 92, 171, 0.08);
+      box-shadow: none;
+    }
+
+    .section-badge.evil {
+      color: var(--evil);
+      background: rgba(155, 20, 40, 0.08);
+      box-shadow: none;
+    }
+
+    .role-row {
+      display: grid;
+      grid-template-columns: var(--icon-size) minmax(120px, 0.32fr) 1fr;
+      gap: 6px 10px;
+      align-items: center;
+      margin-bottom: 10px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .role-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .role-icon {
+      width: var(--icon-size);
+      height: var(--icon-size);
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center;
+      transform: scale(1.13);
+      transform-origin: center;
+      clip-path: circle(50% at 50% 50%);
+      border: none;
+      box-shadow: none;
+    }
+
+    .section.good .role-icon {
+      border: none;
+    }
+
+    .section.evil .role-icon {
+      border: none;
+    }
+
+    .role-name {
+      font-weight: 700;
+      font-size: 15px;
+      line-height: 1.2;
+      padding-top: 0;
+      align-self: center;
+      overflow-wrap: anywhere;
+      color: var(--ink);
+    }
+
+    .section.good .role-name {
+      color: var(--good);
+    }
+
+    .section.evil .role-name {
+      color: var(--evil);
+    }
+
+    .role-text {
+      color: var(--ink);
+      opacity: 0.95;
+      align-self: center;
+    }
+
+    .role-text p {
+      margin: 0 0 0.35em;
+    }
+
+    .role-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .role-text ol {
+      margin: 0.25em 0 0;
+      padding-left: 1.2em;
+    }
+
+    footer.sheet-footer {
+      margin-top: 18px;
+      padding-top: 10px;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    footer.sheet-footer a {
+      color: var(--muted);
+    }
+
+    @media print {
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: #fff;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        font-size: 8.3px;
+        line-height: 1.3;
+        min-height: 0;
+      }
+
+      body::before {
+        display: none;
+      }
+
+      .wrap {
+        max-width: none;
+        margin: 0;
+        padding: 5mm 6mm 3.5mm;
+        border: none;
+        box-shadow: none;
+        background: #fff;
+        min-height: 0;
+      }
+
+      :root {
+        --icon-size: 60px;
+        --paper: #fff;
+        --rule: #ccc;
+      }
+
+      header.sheet-header {
+        margin-bottom: 4mm;
+        padding-bottom: 2.5mm;
+        gap: 7px;
+      }
+
+      .title-block h1 {
+        font-size: 24px;
+        text-shadow: 1.2px 1.2px 0 #2a2730;
+      }
+
+      .title-block .subtitle {
+        font-size: 8.2px;
+        margin-top: 3px;
+      }
+
+      .lab-badge {
+        min-width: 150px;
+        border-width: 1.3px;
+        border-radius: 7px;
+        padding: 3px 7px 4px;
+        gap: 1.5px;
+      }
+
+      .lab-badge__line {
+        font-size: 20px;
+      }
+
+      .lab-badge__line--sub {
+        font-size: 6.2px;
+      }
+
+      .lab-badge__line--dept {
+        font-size: 5.7px;
+      }
+
+      /* двухколоночная вёрстка ролей при печати */
+      .role-list {
+        column-count: 2;
+        column-gap: 4.5mm;
+      }
+
+      .section {
+        page-break-inside: auto;
+        break-inside: auto;
+        margin-bottom: 4px;
+      }
+
+      .section-hr {
+        margin-bottom: 4px;
+        padding-bottom: 2.5px;
+        break-after: avoid;
+        page-break-after: avoid;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .section-badge {
+        font-size: 11px;
+        border-width: 1.3px;
+        padding: 2.5px 9px 3.5px;
+      }
+
+      .section-badge.good,
+      .section-badge.evil {
+        box-shadow: none;
+      }
+
+      .role-row {
+        grid-template-columns: var(--icon-size) minmax(60px, 0.3fr) 1fr;
+        gap: 1.5px 6px;
+        margin-bottom: 3.5px;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      /* жителям чуть больше воздуха — их в левой колонке много и она короче */
+      .section:has(#sec-townsfolk) .role-row {
+        margin-bottom: 6px;
+      }
+
+      .role-text {
+        font-size: 8.3px;
+      }
+
+      .role-name {
+        font-size: 9.6px;
+        line-height: 1.13;
+      }
+
+      .role-text p {
+        margin: 0 0 0.18em;
+      }
+
+      .role-text ol {
+        margin-top: 0.12em;
+        padding-left: 0.95em;
+      }
+
+      footer.sheet-footer {
+        margin-top: 3.5mm;
+        padding-top: 2mm;
+        font-size: 7.5px;
+      }
+    }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="sheet-header">
+      <div class="title-block">
+        <h1>Изнанка Хокинса</h1>
+        <p class="subtitle">Сет для «Кровь на часовой башне» · Очень странные дела</p>
+      </div>
+      <div class="lab-badge" title="Hawkins National Laboratory">
+        <span class="lab-badge__line">hnl</span>
+        <span class="lab-badge__line lab-badge__line--sub">Hawkins National Laboratory</span>
+        <span class="lab-badge__line lab-badge__line--sub lab-badge__line--dept">U.S. Department of Energy</span>
+      </div>
+    </header>
+
+    <main class="role-list">
+    <section class="section good" aria-labelledby="sec-townsfolk">
+      <div class="section-hr">
+        <span id="sec-townsfolk" class="section-badge good">Жители</span>
+      </div>
+
+      <div class="role-row">
+        <img class="role-icon" src="tokens/eleven.png" alt="" width="132" height="132" />
+        <div class="role-name">Оди</div>
+        <div class="role-text">
+          <p>Каждую ночь* выбираете игрока: узнаёте, просыпался ли он этой ночью.</p>
+          <p>Один раз за игру днём можете публично назвать игрока — он умирает; ваша ночная способность с этого момента также не работает.</p>
+        </div>
+      </div>
+      <div class="role-row">
+        <img class="role-icon" src="tokens/hopper.png" alt="" width="132" height="132" />
+        <div class="role-name">Хоппер</div>
+        <div class="role-text">
+          <p>Каждую ночь* выбираете игрока (не себя): если этой ночью он должен умереть — он не умирает.</p>
+          <p>Если вы спасли его от Демона — следующей ночью вы умираете.</p>
+        </div>
+      </div>
+      <div class="role-row">
+        <img class="role-icon" src="tokens/steve.png" alt="" width="132" height="132" />
+        <div class="role-name">Стив</div>
+        <div class="role-text">
+          <p>Каждую ночь* выбираете игрока (не себя): он не может умереть этой ночью. Следующую ночь вы пропускаете.</p>
+          <p>Можете отказаться выбирать — тогда кулдауна нет.</p>
+        </div>
+      </div>
+      <div class="role-row">
+        <img class="role-icon" src="tokens/robin.png" alt="" width="132" height="132" />
+        <div class="role-name">Робин</div>
+        <div class="role-text">
+          <p>Каждую ночь* выбираете игрока: узнаёте, корректно ли сработала его способность этой ночью.</p>
+          <p>Ваша информация всегда корректна.</p>
+        </div>
+      </div>
+      <div class="role-row">
+        <img class="role-icon" src="tokens/nancy.png" alt="" width="132" height="132" />
+        <div class="role-name">Нэнси</div>
+        <div class="role-text">
+          <p>В первую ночь ведущий показывает вам двух других игроков и одну роль Приспешника: один из этих двух играет эту роль.</p>
+        </div>
+      </div>
+      <div class="role-row">
+        <img class="role-icon" src="tokens/dustin.png" alt="" width="132" height="132" />
+        <div class="role-name">Дастин</div>
+        <div class="role-text">
+          <p>Каждую ночь* узнаёте: Демон ближе к вам слева или справа. Считаются только живые игроки.</p>
+          <p>Демогоргон не может вас убить.</p>
+        </div>
+      </div>
+      <div class="role-row">
+        <img class="role-icon" src="tokens/joyce.png" alt="" width="132" height="132" />
+        <div class="role-name">Джойс</div>
+        <div class="role-text">
+          <p>Каждую ночь* выбираете игрока (не себя): узнаёте, действует ли на него негативный эффект (Метка Векны, отравление, опьянение, безумие).</p>
+        </div>
+      </div>
+      <div class="role-row">
+        <img class="role-icon" src="tokens/mike.png" alt="" width="132" height="132" />
+        <div class="role-name">Майк</div>
+        <div class="role-text">
+          <p>Каждую ночь* выбираете игрока: если он просыпался этой ночью, узнаёте, совпадает ли его текущая команда с вашей.</p>
+        </div>
+      </div>
+      <div class="role-row">
+        <img class="role-icon" src="tokens/max.png" alt="" width="132" height="132" />
+        <div class="role-name">Макс</div>
+        <div class="role-text">
+          <p>Вы не можете умереть от Демона ни при каких обстоятельствах.</p>
+          <p>Если Демон выбрал вас целью — вы получаете знак ночью и до конца игры не можете номинировать.</p>
+        </div>
+      </div>
+      <div class="role-row">
+        <img class="role-icon" src="tokens/lucas.png" alt="" width="132" height="132" />
+        <div class="role-name">Лукас</div>
+        <div class="role-text">
+          <p>Каждую ночь* выбираете игрока: узнаёте, был ли он целью активной злой способности и была ли это способность Демона или Приспешника.</p>
+        </div>
+      </div>
+      <div class="role-row">
+        <img class="role-icon" src="tokens/murray.png" alt="" width="132" height="132" />
+        <div class="role-name">Мюррей</div>
+        <div class="role-text">
+          <p>В первую ночь ведущий показывает имена двух других игроков: оба играют за добро.</p>
+        </div>
+      </div>
+      <div class="role-row">
+        <img class="role-icon" src="tokens/suzie.png" alt="" width="132" height="132" />
+        <div class="role-name">Сюзи</div>
+        <div class="role-text">
+          <p>Каждую ночь* выбираете игрока и любую роль из сета: ведущий говорит «да» или «нет».</p>
+        </div>
+      </div>
+      <div class="role-row">
+        <img class="role-icon" src="tokens/eddie.png" alt="" width="132" height="132" />
+        <div class="role-name">Эдди</div>
+        <div class="role-text">
+          <p>Один раз за игру ночью можете объявить «Концерт»: способности Демона и всех живых Приспешников этой ночью применяются к вам вместо их изначальных целей.</p>
+          <p>Вы умираете в результате.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section good" aria-labelledby="sec-outsiders">
+      <div class="section-hr">
+        <span id="sec-outsiders" class="section-badge good">Изгои</span>
+      </div>
+
+      <div class="role-row">
+        <img class="role-icon" src="tokens/will.png" alt="" width="132" height="132" />
+        <div class="role-name">Уилл</div>
+        <div class="role-text">
+          <p>Если становитесь целью активной способности Демона или Приспешника — узнаёте об этом и какую именно способность применили.</p>
+          <p>Эта же способность также применяется к случайному Жителю.</p>
+        </div>
+      </div>
+      <div class="role-row">
+        <img class="role-icon" src="tokens/ted.png" alt="" width="132" height="132" />
+        <div class="role-name">Тед</div>
+        <div class="role-text">
+          <p>Если вы становитесь целью любой направленной способности (доброй, злой, защитной, информационной — дневной или ночной) — вы пугаетесь до усрачки и умираете.</p>
+        </div>
+      </div>
+      <div class="role-row">
+        <img class="role-icon" src="tokens/yuri.png" alt="" width="132" height="132" />
+        <div class="role-name">Юрий</div>
+        <div class="role-text">
+          <p>Каждую ночь* ваша команда меняется.</p>
+          <p>Только вы знаете, в какой команде были изначально.</p>
+        </div>
+      </div>
+      <div class="role-row">
+        <img class="role-icon" src="tokens/alexey.png" alt="" width="132" height="132" />
+        <div class="role-name">Алексей</div>
+        <div class="role-text">
+          <p>В начале игры один из ваших ближайших добрых соседей (на выбор ведущего) отравлен, пока вы живы.</p>
+          <p>Если в начале 3-й ночи вы живы — ведущий тайно называет вам имя одного злого игрока.</p>
+        </div>
+      </div>
+      <div class="role-row">
+        <img class="role-icon" src="tokens/barb.png" alt="" width="132" height="132" />
+        <div class="role-name">Барб</div>
+        <div class="role-text">
+          <p>Если вы умираете, один случайный другой добрый игрок отравлен до конца игры.</p>
+          <p>Этот игрок знает, что отравлен.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section evil" aria-labelledby="sec-minions">
+      <div class="section-hr">
+        <span id="sec-minions" class="section-badge evil">Приспешники</span>
+      </div>
+
+      <div class="role-row">
+        <img class="role-icon" src="tokens/billy.png" alt="" width="132" height="132" />
+        <div class="role-name">Билли</div>
+        <div class="role-text">
+          <p>Каждую ночь* выбираете игрока (не себя): до следующей ночи его команда определяется наоборот для всех проверок (добрый → как злой, злой → как добрый).</p>
+          <p>Если выбран добрый — он также отравлен до следующей ночи.</p>
+        </div>
+      </div>
+      <div class="role-row">
+        <img class="role-icon" src="tokens/brenner.png" alt="" width="132" height="132" />
+        <div class="role-name">Бреннер</div>
+        <div class="role-text">
+          <p>В начале игры видите гримуар.</p>
+          <p>В игре на 1 больше Изгоев.</p>
+        </div>
+      </div>
+      <div class="role-row">
+        <img class="role-icon" src="tokens/grigori.png" alt="" width="132" height="132" />
+        <div class="role-name">Григорий</div>
+        <div class="role-text">
+          <p>Каждую ночь* выбираете игрока: его способность этой ночью не срабатывает.</p>
+        </div>
+      </div>
+      <div class="role-row">
+        <img class="role-icon" src="tokens/demogorgon.png" alt="" width="132" height="132" />
+        <div class="role-name">Демогоргон</div>
+        <div class="role-text">
+          <p>Каждую ночь* выбираете игрока: если он не участвовал в голосовании прошедшим днём, он умирает.</p>
+          <p>Не может убить Дастина.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section evil" aria-labelledby="sec-demons">
+      <div class="section-hr">
+        <span id="sec-demons" class="section-badge evil">Демоны</span>
+      </div>
+
+      <div class="role-row">
+        <img class="role-icon" src="tokens/vecna.png" alt="" width="132" height="132" />
+        <div class="role-name">Векна</div>
+        <div class="role-text">
+          <p>Каждую ночь выбираете игрока: он получает Метку Векны и знает об этом. Следующей ночью он умирает, если не был спасён.</p>
+          <p>Эскалация (за каждую смерть игрока с активной Меткой):</p>
+          <ol>
+            <li>Все игроки с Меткой отравлены.</li>
+            <li>Все игроки с Меткой безумны — запрет говорить о Метке.</li>
+            <li>Игроки с Меткой не могут номинировать; их голоса не считаются.</li>
+            <li>Зло немедленно побеждает.</li>
+          </ol>
+        </div>
+      </div>
+      <div class="role-row">
+        <img class="role-icon" src="tokens/mindflayer.png" alt="" width="132" height="132" />
+        <div class="role-name">Истязатель<br>разума</div>
+        <div class="role-text">
+          <p>Каждую ночь* выбираете одно действие:</p>
+          <ol>
+            <li>Выберите игрока: он отравлен.</li>
+            <li>Все отравленные игроки этой ночью умирают.</li>
+          </ol>
+        </div>
+      </div>
+      <div class="role-row">
+        <img class="role-icon" src="tokens/whatsit.png" alt="" width="132" height="132" />
+        <div class="role-name">Мистер<br>Этосамое</div>
+        <div class="role-text">
+          <p>В этой партии нет Приспешников.</p>
+          <p>Каждую ночь* выберите живого доброго игрока: его команда меняется на злую до конца игры. Он узнаёт об этом и видит вас и других злых.</p>
+          <p>Один раз за игру днём публично объявите победу: если живых злых ≥ живых добрых — зло побеждает; иначе вы немедленно казнены.</p>
+        </div>
+      </div>
+    </section>
+
+    </main>
+
+    <footer class="sheet-footer">
+      <span>© Steven Medway · <a href="https://bloodontheclocktower.com">bloodontheclocktower.com</a> · фанатский сет «Изнанка Хокинса»</span>
+      <span>Печать в PDF: Chrome → Печать → More settings → выключить «Headers and footers», поля «None», масштаб 100%</span>
+    </footer>
+  </div>
+</body>
+</html>

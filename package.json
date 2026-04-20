@@ -1,0 +1,19 @@
+{
+  "name": "izn-hawkins",
+  "private": true,
+  "version": "0.1.0",
+  "description": "«Изнанка Хокинса» — custom BotC set. Monorepo: core engine, simulator, digital grimoire, online lobby.",
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "sim": "bun packages/sim/src/cli.ts",
+    "sim:trace": "bun packages/sim/src/cli.ts --games 1 --verbose",
+    "test": "bun test packages",
+    "typecheck": "tsc --noEmit -p packages/core && tsc --noEmit -p packages/sim",
+    "export:png": "./export-png.sh",
+    "export:png:all": "./export-png.sh"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.0",
+    "typescript": "^5.5.0"
+  }
+}

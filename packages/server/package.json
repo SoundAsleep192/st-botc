@@ -1,0 +1,10 @@
+{
+  "name": "@botc/server",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Online lobby server: rooms, role distribution, private night prompts. Stub.",
+  "dependencies": {
+    "@botc/core": "workspace:*"
+  }
+}

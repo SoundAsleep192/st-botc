@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Изнанка Хокинса — порядок ночей</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #e8e4dc;
+      --paper: #f7f4ed;
+      --ink: #1a1a1f;
+      --muted: #5c5852;
+      --good: #0d5cab;
+      --good-soft: rgba(13, 92, 171, 0.10);
+      --evil: #9b1428;
+      --evil-soft: rgba(155, 20, 40, 0.10);
+      --rule: #c9c4ba;
+      --token-size: 28px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      font-size: 11px;
+      line-height: 1.4;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 12mm 10mm 12mm;
+      background: linear-gradient(180deg, #fdfcfa 0%, var(--paper) 35%, #f2efe6 100%);
+      border: 1px solid var(--rule);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    header.sheet-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .title-block h1 {
+      margin: 0;
+      font-family: "Bungee", cursive;
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      color: var(--evil);
+      text-shadow: 1.5px 1.5px 0 #2a2730;
+    }
+
+    .title-block .subtitle {
+      margin: 6px 0 0;
+      font-size: 10.5px;
+      color: var(--muted);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .lab-badge {
+      flex-shrink: 0;
+      min-width: 200px;
+      padding: 5px 9px 6px;
+      border: 2px solid #2a2730;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      text-align: center;
+      background: #f3f2f0;
+    }
+
+    .lab-badge__line {
+      display: block;
+      font-family: "Bungee", cursive;
+      font-size: 26px;
+      line-height: 0.95;
+      color: #1f1b23;
+      letter-spacing: 0.03em;
+    }
+
+    .lab-badge__line--sub {
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      font-size: 7px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .lab-badge__line--dept {
+      font-size: 6px;
+      letter-spacing: 0.2em;
+    }
+
+    .columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .col-title {
+      font-family: "Bungee", cursive;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin: 0 0 8px;
+      padding: 5px 10px 6px;
+      border: 1.5px solid var(--ink);
+      background: #fff;
+      text-align: center;
+      border-radius: 6px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 18px var(--token-size) 1fr;
+      gap: 6px;
+      align-items: center;
+      padding: 3px 4px;
+      border-bottom: 1px dashed var(--rule);
+    }
+
+    .step:last-child { border-bottom: none; }
+
+    .step.phase {
+      grid-template-columns: 1fr;
+      padding: 6px 4px 2px;
+      border-bottom: none;
+      margin-top: 4px;
+    }
+
+    .phase-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 2px;
+    }
+
+    .step-num {
+      font-family: "Bungee", cursive;
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .step-token {
+      width: var(--token-size);
+      height: var(--token-size);
+      border-radius: 50%;
+      object-fit: cover;
+      transform: scale(1.13);
+      transform-origin: center;
+      clip-path: circle(50% at 50% 50%);
+    }
+
+    .step.no-token .step-token {
+      visibility: hidden;
+    }
+
+    .step-body { line-height: 1.25; }
+
+    .step-name {
+      font-weight: 700;
+      font-size: 11.5px;
+      color: var(--ink);
+    }
+
+    .step-name.good { color: var(--good); }
+    .step-name.evil { color: var(--evil); }
+
+    .step-desc {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .footer-blocks {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .info-block {
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      padding: 7px 9px;
+      background: #fff;
+    }
+
+    .info-block h3 {
+      margin: 0 0 4px;
+      font-family: "Bungee", cursive;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    .info-block p, .info-block ul {
+      margin: 0 0 4px;
+      font-size: 9.5px;
+      line-height: 1.35;
+      color: var(--ink);
+    }
+
+    .info-block ul { padding-left: 14px; }
+
+    .info-block .muted { color: var(--muted); }
+
+    footer.sheet-footer {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 6px;
+      font-size: 8.5px;
+      color: var(--muted);
+    }
+
+    footer.sheet-footer a { color: var(--muted); }
+
+    @media print {
+      html, body { margin: 0; padding: 0; }
+      body {
+        background: #fff;
+        min-height: 0;
+        font-size: 9.5px;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      body::before { display: none; }
+      .wrap {
+        max-width: none;
+        margin: 0;
+        padding: 5mm 6mm 4mm;
+        border: none;
+        box-shadow: none;
+        background: #fff;
+      }
+      :root { --paper: #fff; --rule: #ccc; --token-size: 22px; }
+
+      header.sheet-header {
+        margin-bottom: 6px;
+        padding-bottom: 5px;
+      }
+      .title-block h1 { font-size: 22px; }
+      .title-block .subtitle { font-size: 9px; margin-top: 3px; }
+
+      .lab-badge { min-width: 150px; padding: 3px 6px 4px; }
+      .lab-badge__line { font-size: 18px; }
+      .lab-badge__line--sub { font-size: 6px; }
+      .lab-badge__line--dept { font-size: 5px; }
+
+      .columns { gap: 8px; }
+      .col-title {
+        font-size: 11px;
+        padding: 3px 6px 4px;
+        margin: 0 0 5px;
+      }
+
+      .step {
+        grid-template-columns: 14px var(--token-size) 1fr;
+        gap: 5px;
+        padding: 1.5px 2px;
+      }
+      .step.phase { padding: 4px 2px 1px; margin-top: 2px; }
+      .step-num { font-size: 11px; }
+      .step-name { font-size: 10px; }
+      .step-desc { font-size: 8.5px; line-height: 1.2; }
+      .phase-label { font-size: 8px; padding-bottom: 1px; }
+
+      .footer-blocks {
+        margin-top: 6px;
+        gap: 6px;
+      }
+      .info-block { padding: 5px 7px; }
+      .info-block h3 { font-size: 9px; margin-bottom: 3px; }
+      .info-block p, .info-block ul {
+        font-size: 8.5px;
+        line-height: 1.3;
+        margin-bottom: 2px;
+      }
+      .info-block ul { padding-left: 12px; }
+
+      footer.sheet-footer {
+        margin-top: 4px;
+        padding-top: 3px;
+        font-size: 7.5px;
+      }
+
+      .step, .phase, .info-block {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+    }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="sheet-header">
+      <div class="title-block">
+        <h1>Порядок ночей</h1>
+        <p class="subtitle">Изнанка Хокинса · для ведущего</p>
+      </div>
+      <div class="lab-badge" title="Hawkins National Laboratory">
+        <span class="lab-badge__line">hnl</span>
+        <span class="lab-badge__line lab-badge__line--sub">Hawkins National Laboratory</span>
+        <span class="lab-badge__line lab-badge__line--sub lab-badge__line--dept">U.S. Department of Energy</span>
+      </div>
+    </header>
+
+    <div class="columns">
+
+      <!-- ПЕРВАЯ НОЧЬ -->
+      <section>
+        <div class="col-title">Первая ночь · N1</div>
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <img class="step-token" src="tokens/brenner.png" alt="" />
+          <div class="step-body">
+            <div class="step-name evil">Бреннер</div>
+            <div class="step-desc">Единоразово видит гримуар.</div>
+          </div>
+        </div>
+
+        <div class="step no-token">
+          <div class="step-num">2</div>
+          <img class="step-token" src="" alt="" />
+          <div class="step-body">
+            <div class="step-name evil">Приспешники</div>
+            <div class="step-desc">Знакомятся, видят Демона и три блефа. <span class="muted">Пропуск, если в партии Мистер Этосамое.</span></div>
+          </div>
+        </div>
+
+        <div class="step no-token">
+          <div class="step-num">3</div>
+          <img class="step-token" src="" alt="" />
+          <div class="step-body">
+            <div class="step-name evil">Демон</div>
+            <div class="step-desc">Видит Приспешников (если есть) и три блефа.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">4</div>
+          <img class="step-token" src="tokens/yuri.png" alt="" />
+          <div class="step-body">
+            <div class="step-name good">Юрий</div>
+            <div class="step-desc">Ведущий показывает изначальную команду.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">5</div>
+          <img class="step-token" src="tokens/alexey.png" alt="" />
+          <div class="step-body">
+            <div class="step-name good">Алексей Смирнов</div>
+            <div class="step-desc">Выбор одного из ближайших добрых соседей (No&nbsp;Dashii&nbsp;style) — отравлен.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">6</div>
+          <img class="step-token" src="tokens/vecna.png" alt="" />
+          <div class="step-body">
+            <div class="step-name evil">Векна</div>
+            <div class="step-desc">Выбор первой Метки. Игрок видит знак часов.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">7</div>
+          <img class="step-token" src="tokens/nancy.png" alt="" />
+          <div class="step-body">
+            <div class="step-name good">Нэнси</div>
+            <div class="step-desc">«Вилка» Investigator: 2 игрока + 1 роль Приспешника.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">8</div>
+          <img class="step-token" src="tokens/murray.png" alt="" />
+          <div class="step-body">
+            <div class="step-name good">Мюррей Бауман</div>
+            <div class="step-desc">Показ двух игроков, играющих за добро.</div>
+          </div>
+        </div>
+
+        <div class="step phase">
+          <div class="phase-label">Не действуют в N1</div>
+        </div>
+        <div class="step no-token">
+          <div class="step-num">—</div>
+          <img class="step-token" src="" alt="" />
+          <div class="step-body">
+            <div class="step-desc">Оди, Хоппер, Стив, Робин, Дастин, Джойс, Майк, Лукас, Макс (пассив), Сюзи, Эдди, Уилл, Тед, Барб, Билли, Григорий, Демогоргон, Истязатель разума, Мистер&nbsp;Этосамое.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ОБЫЧНЫЕ НОЧИ -->
+      <section>
+        <div class="col-title">Обычные ночи · N2+</div>
+
+        <div class="step phase"><div class="phase-label">Манипуляции и блокировки</div></div>
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <img class="step-token" src="tokens/eddie.png" alt="" />
+          <div class="step-body">
+            <div class="step-name good">Эдди</div>
+            <div class="step-desc">Может объявить Концерт — все ночные выборы злых переадресуются на него; в конце ночи умирает.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <img class="step-token" src="tokens/yuri.png" alt="" />
+          <div class="step-body">
+            <div class="step-name good">Юрий</div>
+            <div class="step-desc">Меняет команду; ведущий показывает новую.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <img class="step-token" src="tokens/grigori.png" alt="" />
+          <div class="step-body">
+            <div class="step-name evil">Григорий</div>
+            <div class="step-desc">Выбор цели — её способность этой ночью не сработает.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">4</div>
+          <img class="step-token" src="tokens/billy.png" alt="" />
+          <div class="step-body">
+            <div class="step-name evil">Билли</div>
+            <div class="step-desc">Инверсия команды до следующей ночи; добрый — также отравлен.</div>
+          </div>
+        </div>
+
+        <div class="step phase"><div class="phase-label">Отравление и конверсия</div></div>
+
+        <div class="step">
+          <div class="step-num">5</div>
+          <img class="step-token" src="tokens/mindflayer.png" alt="" />
+          <div class="step-body">
+            <div class="step-name evil">Истязатель разума</div>
+            <div class="step-desc">Действие 1: отравить нового. Действие 2: убить всех отравленных этой ночью.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">6</div>
+          <img class="step-token" src="tokens/whatsit.png" alt="" />
+          <div class="step-body">
+            <div class="step-name evil">Мистер Этосамое</div>
+            <div class="step-desc">Переманивание доброго — команда меняется на злую до конца игры; видит Демона и злых.</div>
+          </div>
+        </div>
+
+        <div class="step phase"><div class="phase-label">Метки</div></div>
+
+        <div class="step">
+          <div class="step-num">7</div>
+          <img class="step-token" src="tokens/vecna.png" alt="" />
+          <div class="step-body">
+            <div class="step-name evil">Векна</div>
+            <div class="step-desc">Выбор новой Метки. Игрок видит знак часов.</div>
+          </div>
+        </div>
+
+        <div class="step phase"><div class="phase-label">Защиты</div></div>
+
+        <div class="step">
+          <div class="step-num">8</div>
+          <img class="step-token" src="tokens/hopper.png" alt="" />
+          <div class="step-body">
+            <div class="step-name good">Хоппер</div>
+            <div class="step-desc">Выбор цели защиты от любого ночного убийства.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">9</div>
+          <img class="step-token" src="tokens/steve.png" alt="" />
+          <div class="step-body">
+            <div class="step-name good">Стив</div>
+            <div class="step-desc">Выбор цели защиты или пас. Если выбрал — следующая ночь кулдаун.</div>
+          </div>
+        </div>
+
+        <div class="step phase"><div class="phase-label">Атаки</div></div>
+
+        <div class="step">
+          <div class="step-num">10</div>
+          <img class="step-token" src="tokens/demogorgon.png" alt="" />
+          <div class="step-body">
+            <div class="step-name evil">Демогоргон</div>
+            <div class="step-desc">Выбор цели; умирает, если не голосовал. Не может убить Дастина.</div>
+          </div>
+        </div>
+
+        <div class="step phase"><div class="phase-label">Применение смертей</div></div>
+
+        <div class="step no-token">
+          <div class="step-num">⚑</div>
+          <img class="step-token" src="" alt="" />
+          <div class="step-body">
+            <div class="step-desc"><b>Векна:</b> игрок с активной Меткой умирает (защита снимает Метку, эскалация не идёт). <b>Демогоргон:</b> цель умирает (защита работает). <b>Истязатель (д.&nbsp;2):</b> все отравленные умирают (защита по каждой жертве). <b>Макс:</b> не умирает от Демона. Триггеры: <b>Барб</b>, эскалация Векны.</div>
+          </div>
+        </div>
+
+        <div class="step phase"><div class="phase-label">Информация</div></div>
+
+        <div class="step">
+          <div class="step-num">11</div>
+          <img class="step-token" src="tokens/dustin.png" alt="" />
+          <div class="step-body">
+            <div class="step-name good">Дастин</div>
+            <div class="step-desc">Демон ближе слева или справа.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">12</div>
+          <img class="step-token" src="tokens/joyce.png" alt="" />
+          <div class="step-body">
+            <div class="step-name good">Джойс</div>
+            <div class="step-desc">Есть ли у цели негативный эффект (да/нет).</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">13</div>
+          <img class="step-token" src="tokens/mike.png" alt="" />
+          <div class="step-body">
+            <div class="step-name good">Майк</div>
+            <div class="step-desc">Если цель просыпалась — совпадает ли её команда с Майковой.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">14</div>
+          <img class="step-token" src="tokens/lucas.png" alt="" />
+          <div class="step-body">
+            <div class="step-name good">Лукас</div>
+            <div class="step-desc">Была ли цель целью активной злой способности; чьей — Демона или Приспешника.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">15</div>
+          <img class="step-token" src="tokens/robin.png" alt="" />
+          <div class="step-body">
+            <div class="step-name good">Робин</div>
+            <div class="step-desc">Корректно ли сработала способность цели этой ночью.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">16</div>
+          <img class="step-token" src="tokens/eleven.png" alt="" />
+          <div class="step-body">
+            <div class="step-name good">Оди</div>
+            <div class="step-desc">Просыпался ли выбранный игрок этой ночью.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">17</div>
+          <img class="step-token" src="tokens/suzie.png" alt="" />
+          <div class="step-body">
+            <div class="step-name good">Сюзи</div>
+            <div class="step-desc">Играет ли указанный игрок указанную роль (да/нет).</div>
+          </div>
+        </div>
+
+        <div class="step phase"><div class="phase-label">Прочие триггеры</div></div>
+
+        <div class="step">
+          <div class="step-num">⚑</div>
+          <img class="step-token" src="tokens/alexey.png" alt="" />
+          <div class="step-body">
+            <div class="step-name good">Алексей Смирнов · N3</div>
+            <div class="step-desc">Если жив в начале N3 — узнаёт имя одного злого.</div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <div class="footer-blocks">
+      <div class="info-block">
+        <h3>Корнеры порядка</h3>
+        <ul>
+          <li><b>Эдди (Концерт)</b> «съедает» всю активность злых: Билли, Истязатель, Мистер Этосамое, Векна, Демогоргон — все «бьют» по Эдди. Он гарантированно умирает; злые впустую крутят ночь.</li>
+          <li><b>Григорий блокирует Векну</b> — новая Метка не вешается, но СТАРАЯ срабатывает (она была повешена раньше).</li>
+          <li><b>Григорий блокирует Хоппера/Стива</b> — не защищают; кулдаун Стива не активируется.</li>
+          <li><b>Григорий блокирует Истязателя</b> — действие не выбрано; прошлые отравленные остаются отравленными.</li>
+          <li><b>Билли + Юрий</b>: инверсия применяется к УЖЕ изменённой команде Юрия в эту ночь.</li>
+          <li><b>Векна + Мистер Этосамое</b> в одной партии не бывает — это разные демоны.</li>
+        </ul>
+      </div>
+      <div class="info-block">
+        <h3>Шпаргалка</h3>
+        <p><b>Конвенция:</b> «*» = «каждую ночь, кроме первой». Если роли в эту ночь нет действия — пропуск.</p>
+        <p><b>Защиты раньше атак.</b> Информация — самая последняя. Отравление и конверсия — до информации.</p>
+        <p><b>Партия с Мистером Этосамое:</b> Бреннер, Билли, Григорий, Демогоргон не в игре. Места приспешников → Жители (на 12+ можно один в Изгои).</p>
+        <p><b>Тайминг:</b> ходи по комнате равномерно, не пали кто действует — особенно в партии с Мистером Этосамое (нет ночных смертей в начале, как и у Истязателя).</p>
+      </div>
+    </div>
+
+    <footer class="sheet-footer">
+      <span>© Steven Medway · <a href="https://bloodontheclocktower.com">bloodontheclocktower.com</a> · фанатский сет «Изнанка Хокинса»</span>
+      <span>Для печати: Файл → Печать → сохранить как PDF</span>
+    </footer>
+  </div>
+</body>
+</html>

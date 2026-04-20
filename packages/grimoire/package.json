@@ -1,0 +1,10 @@
+{
+  "name": "@botc/grimoire",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Digital grimoire: single-page web app for Storyteller. Consumes @botc/core for role logic and game state. Stub.",
+  "dependencies": {
+    "@botc/core": "workspace:*"
+  }
+}

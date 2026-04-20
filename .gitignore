@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# TypeScript build artefacts
+dist/
+build/
+*.tsbuildinfo
+
+# Сгенерированные ассеты (PNG/PDF печатных листов — пересоздаются скриптом)
+generated/
+
+# Сгенерированные PNG в корне (старое место, новые падают в generated/)
+/sheet.png
+/night-order.png
+/jinxes.png
+
+# Симулятор — экспорт логов/отчётов
+*.sim.log
+*.sim.json
+
+# System
+.DS_Store
+Thumbs.db
+*.log
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
